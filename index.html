@@ -2,19 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的网站</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            overflow: hidden;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0;
+        }
+        nav ul li a {
+            display: inline-block;
+            color: white;
+            padding: 1rem;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            background-color: #555;
+        }
+        .container {
+            padding: 2rem;
+        }
+        .container img {
+            max-width: 100%;
+            height: auto;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>欢迎来到我的网站！</h1>
-    <p>这是我的第一个 GitHub Pages 网站。</p>
+    <header>
+        <h1>欢迎来到机器人的世界！</h1>
+    </header>
     <nav>
         <ul>
             <li><a href="index.html">首页</a></li>
             <li><a href="news.html">最新资讯</a></li>
             <li><a href="3dmodel.html">3D人形模型构建</a></li>
-            <li><a href="interaction.html">大模型交互</a></li>
+            <li><a href="interaction.html">人工智能交互</a></li>
             <li><a href="products.html">人形机器人商品</a></li>
         </ul>
     </nav>
+    <div class="container">
+        <h2>关于我们</h2>
+        <p>我们致力于促进人性机器人的发展，增进人类福祉。</p>
+        <img src="https://via.placeholder.com/800x400" alt="示例图片">
+    </div>
+    <footer>
+        <p>&copy; 2024 我的公司. 保留所有权利.</p>
+    </footer>
 </body>
 </html>
