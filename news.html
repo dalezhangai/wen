@@ -1,0 +1,24 @@
+     <!DOCTYPE html>
+     <html lang="en">
+     <head>
+         <meta charset="UTF-8">
+         <title>人形机器人资讯</title>
+     </head>
+     <body>
+         <h1>最新资讯</h1>
+         <div id="news"></div>
+         <script>
+             async function fetchNews() {
+                 const response = await fetch('https://newsapi.org/v2/everything?q=humanoid+robot&apiKey=你的API密钥');
+                 const data = await response.json();
+                 const newsContainer = document.getElementById('news');
+                 data.articles.forEach(article => {
+                     const articleElement = document.createElement('div');
+                     articleElement.innerHTML = `<h2>${article.title}</h2><p>${article.description}</p><a href="${article.url}">阅读更多</a>`;
+                     newsContainer.appendChild(articleElement);
+                 });
+             }
+             fetchNews();
+         </script>
+     </body>
+     </html>
