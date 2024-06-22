@@ -104,7 +104,6 @@
         .message-content {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
         }
         .message-content img {
             margin-right: 0.5rem;
@@ -158,8 +157,9 @@
         <div id="chatLog" class="chat-log">
             <div class="message bot">
                 <div class="message-content">
-                    <img src="https://i.loli.net/your_image.jpg" alt="图标">
-                    <span>芯旦：</span> 👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！
+                    <img src="https://i.imgur.com/your_image.jpg" alt="图标">
+                    <span>芯旦</span>
+                    👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！
                 </div>
                 <div>
                     🌱 此刻你在想些什么？有问题欢迎随时向我提问，或者把你想读的 📄 网页和 📚 文件发给我试试~
@@ -196,12 +196,12 @@
 
             const url = 'https://api.coze.cn/open_api/v2/chat';
             const headers = {
-                'Authorization': 'Bearer pat_EbN7ggPK3JKf9YZtEfUMecoGkFso21EdaiuRilZmZOwozLPDctRIL9ZHrrQhyYmG',
+                'Authorization': 'Bearer pat_8fwz7e5QvV8OJUrNN7lNhJRNfmtaiPxidQd2MEUuymbZDR5MnRPlpRPkeLKQ5Xnj',
                 'Content-Type': 'application/json'
             };
             const data = {
                 "conversation_id": "123",
-                "bot_id": "7373589054476238875",
+                "bot_id": "7376213740515147787",
                 "user": "123333333",
                 "query": inputText,
                 "stream": false
@@ -223,8 +223,9 @@
                 botMessage.className = 'message bot';
                 botMessage.innerHTML = `
                     <div class="message-content">
-                        <img src="https://i.loli.net/your_image.jpg" alt="图标">
-                        <span>芯旦：</span> ${result.messages[0].content}
+                        <img src="https://i.imgur.com/your_image.jpg" alt="图标">
+                        <span>芯旦</span>
+                        ${result.messages[0].content}
                     </div>`;
                 chatLog.appendChild(botMessage);
             } catch (error) {
@@ -232,8 +233,9 @@
                 errorMessage.className = 'message bot';
                 errorMessage.innerHTML = `
                     <div class="message-content">
-                        <img src="https://i.loli.net/your_image.jpg" alt="图标">
-                        <span>芯旦：</span> Error: ${error.message}
+                        <img src="https://i.imgur.com/your_image.jpg" alt="图标">
+                        <span>芯旦</span>
+                        Error: ${error.message}
                     </div>`;
                 chatLog.appendChild(errorMessage);
             } finally {
