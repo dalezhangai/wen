@@ -42,42 +42,42 @@
         }
         .container {
             padding: 2rem;
-        }
-        .chat-box {
             max-width: 600px;
             margin: 0 auto;
-            padding: 1rem;
+        }
+        .chat-box {
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
             background-color: white;
-            border-radius: 5px;
+            border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
         .chat-log {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 1rem;
+            flex: 1;
             padding: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: white;
+            overflow-y: auto;
         }
         .chat-input {
             display: flex;
-            margin-bottom: 1rem;
+            padding: 1rem;
+            border-top: 1px solid #ddd;
         }
         .chat-input textarea {
             flex: 1;
             padding: 1rem;
-            border-radius: 5px;
+            border-radius: 20px;
             border: 1px solid #ddd;
             resize: none;
+            margin-right: 1rem;
         }
         .chat-input button {
             padding: 1rem 2rem;
-            margin-left: 1rem;
             background-color: #333;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
         }
         .chat-input button:hover {
@@ -86,22 +86,26 @@
         .message {
             margin-bottom: 1rem;
             padding: 1rem;
-            border-radius: 5px;
-            background-color: white;
+            border-radius: 10px;
+            background-color: #f4f4f4;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .message.bot:before {
             content: "芯旦：";
             font-weight: bold;
         }
+        .message.user {
+            background-color: #e0f7fa;
+            text-align: right;
+        }
+        .message.bot {
+            background-color: #fff;
+        }
         footer {
             background-color: #333;
             color: white;
             text-align: center;
             padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
         }
     </style>
 </head>
@@ -137,7 +141,7 @@
 
             // 显示用户消息
             const userMessage = document.createElement('div');
-            userMessage.className = 'message';
+            userMessage.className = 'message user';
             userMessage.innerText = inputText;
             chatLog.appendChild(userMessage);
 
