@@ -10,26 +10,48 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
-        }
-        .container {
             display: flex;
             flex-direction: column;
             height: 100vh;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             max-width: 600px;
             margin: 0 auto;
-            background-color: white;
+            background-color: #f4f4f4;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+        }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+        .chat-header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        .chat-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
         }
         .chat-log {
             flex: 1;
             padding: 1rem;
             overflow-y: auto;
+            background-color: #f4f4f4;
         }
         .chat-input {
             display: flex;
             padding: 1rem;
+            background-color: #fff;
             border-top: 1px solid #ddd;
         }
         .chat-input textarea {
@@ -39,44 +61,64 @@
             border: 1px solid #ddd;
             resize: none;
             margin-right: 1rem;
+            font-size: 1rem;
         }
         .chat-input button {
-            padding: 1rem 2rem;
-            background-color: #333;
+            padding: 1rem;
+            background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 50%;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .chat-input button:hover {
-            background-color: #555;
+            background-color: #0056b3;
         }
         .message {
             margin-bottom: 1rem;
             padding: 1rem;
             border-radius: 10px;
-            background-color: #f4f4f4;
+            background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 80%;
         }
         .message.bot:before {
             content: "芯旦：";
             font-weight: bold;
+            display: block;
         }
         .message.user {
             background-color: #e0f7fa;
             text-align: right;
+            align-self: flex-end;
         }
         .message.bot {
             background-color: #fff;
+            align-self: flex-start;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="chatLog" class="chat-log"></div>
+        <div class="chat-header">
+            <img src="https://via.placeholder.com/40" alt="头像">
+            <h1>芯旦</h1>
+            <div></div>
+        </div>
+        <div id="chatLog" class="chat-log">
+            <div class="message bot">
+                👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！<br>
+                🌱 此刻你在想些什么？有问题欢迎随时向我提问，或者把你想读的 📄 网页和 📚 文件发给我试试~
+            </div>
+        </div>
         <div class="chat-input">
-            <textarea id="inputText" placeholder="输入文本"></textarea>
-            <button onclick="interactWithModel()">发送</button>
+            <textarea id="inputText" placeholder="有什么问题尽管问我"></textarea>
+            <button onclick="interactWithModel()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="white" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
         </div>
     </div>
     <script>
