@@ -65,6 +65,14 @@
         .input-container {
             margin-bottom: 1rem;
         }
+        .button-container {
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 600px) {
+            #3dmodel {
+                height: 40vh;
+            }
+        }
     </style>
 </head>
 <body>
@@ -82,8 +90,11 @@
     </nav>
     <div class="container">
         <div class="input-container">
-            <input type="text" id="userInput" placeholder="输入模型高度和颜色，例如 '高度: 5 颜色: red'">
+            <input type="text" id="userInput" placeholder="输入形状、大小和颜色，例如 '正方体 大 红'">
             <button onclick="generateModel()">生成模型</button>
+        </div>
+        <div class="button-container">
+            <button onclick="exportModel()">导出模型</button>
         </div>
         <div id="3dmodel"></div>
     </div>
@@ -91,8 +102,13 @@
         <p>&copy; 2024 芯旦科技公司. 保留所有权利.</p>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/GLTFExporter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
     <script>
-        let scene, camera, renderer, model;
+        let scene, camera, renderer, controls;
+        let models = [];
+        let selectedModel = null;
+        let plane;
 
         function init() {
             scene = new THREE.Scene();
@@ -105,42 +121,171 @@
             light.position.set(5, 10, 7.5);
             scene.add(light);
 
-            camera.position.z = 5;
+            camera.position.z = 10;
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.25;
+            controls.enableZoom = true;
+
+            plane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000), new THREE.MeshBasicMaterial({ visible: false }));
+            scene.add(plane);
+
+            window.addEventListener('resize', onWindowResize, false);
+            window.addEventListener('mousedown', onMouseDown, false);
+            window.addEventListener('mousemove', onMouseMove, false);
+            window.addEventListener('mouseup', onMouseUp, false);
 
             animate();
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            if (model) model.rotation.y += 0.01;
+            controls.update();
             renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function parseInput(input) {
+            const shapeMatch = input.match(/(正方体|长方体|球体|圆柱体|圆锥体|圆环体|八面体|四面体|十二面体|二十面体)/);
+            const sizeMatch = input.match(/(大|中|小)/);
+            const colorMatch = input.match(/(红|黄|蓝|绿|紫|黑|白)/);
+
+            const shape = shapeMatch ? shapeMatch[1] : '正方体';
+            const size = sizeMatch ? sizeMatch[1] : '中';
+            const color = colorMatch ? colorMatch[1] : '灰';
+
+            return { shape, size, color };
+        }
+
+        function getSizeMultiplier(size) {
+            switch (size) {
+                case '大': return 3;
+                case '中': return 2;
+                case '小': return 1;
+                default: return 2;
+            }
+        }
+
+        function getColorCode(color) {
+            switch (color) {
+                case '红': return 'red';
+                case '黄': return 'yellow';
+                case '蓝': return 'blue';
+                case '绿': return 'green';
+                case '紫': return 'purple';
+                case '黑': return 'black';
+                case '白': return 'white';
+                default: return 'gray';
+            }
+        }
+
+        function createGeometry(shape, sizeMultiplier) {
+            switch (shape) {
+                case '正方体': return new THREE.BoxGeometry(sizeMultiplier, sizeMultiplier, sizeMultiplier);
+                case '长方体': return new THREE.BoxGeometry(sizeMultiplier * 2, sizeMultiplier, sizeMultiplier);
+                case '球体': return new THREE.SphereGeometry(sizeMultiplier, 32, 32);
+                case '圆柱体': return new THREE.CylinderGeometry(sizeMultiplier, sizeMultiplier, sizeMultiplier * 2, 32);
+                case '圆锥体': return new THREE.ConeGeometry(sizeMultiplier, sizeMultiplier * 2, 32);
+                case '圆环体': return new THREE.TorusGeometry(sizeMultiplier, sizeMultiplier / 2, 16, 100);
+                case '八面体': return new THREE.OctahedronGeometry(sizeMultiplier);
+                case '四面体': return new THREE.TetrahedronGeometry(sizeMultiplier);
+                case '十二面体': return new THREE.DodecahedronGeometry(sizeMultiplier);
+                case '二十面体': return new THREE.IcosahedronGeometry(sizeMultiplier);
+                default: return new THREE.BoxGeometry(sizeMultiplier, sizeMultiplier, sizeMultiplier);
+            }
         }
 
         function generateModel() {
             const input = document.getElementById('userInput').value;
-            const heightMatch = input.match(/高度:\s*(\d+(\.\d+)?)/);
-            const colorMatch = input.match(/颜色:\s*([a-zA-Z]+)/);
+            const { shape, size, color } = parseInput(input);
 
-            const height = heightMatch ? parseFloat(heightMatch[1]) : 1;
-            const color = colorMatch ? colorMatch[1] : 'gray';
+            const sizeMultiplier = getSizeMultiplier(size);
+            const colorCode = getColorCode(color);
 
-            if (model) scene.remove(model);
-
-            const geometry = new THREE.BoxGeometry(1, height, 1);
-            const material = new THREE.MeshStandardMaterial({ color: color });
-            model = new THREE.Mesh(geometry, material);
+            const geometry = createGeometry(shape, sizeMultiplier);
+            const material = new THREE.MeshStandardMaterial({ color: colorCode });
+            const model = new THREE.Mesh(geometry, material);
+            model.userData = { shape, size, color };
             scene.add(model);
+            models.push(model);
         }
 
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        function exportModel() {
+            const exporter = new THREE.GLTFExporter();
+            exporter.parse(scene, function (result) {
+                const output = JSON.stringify(result, null, 2);
+                const blob = new Blob([output], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'model.gltf';
+                link.click();
+            });
+        }
+
+        function onMouseDown(event) {
+            event.preventDefault();
+            const mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+
+            const intersects = raycaster.intersectObjects(models);
+            if (intersects.length > 0) {
+                selectedModel = intersects[0].object;
+                document.addEventListener('keydown', onKeyDown, false);
+            }
+        }
+
+        function onMouseMove(event) {
+            if (selectedModel) {
+                const mouse = new THREE.Vector2();
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(mouse, camera);
+
+                const intersects = raycaster.intersectObject(plane);
+                if (intersects.length > 0) {
+                    selectedModel.position.copy(intersects[0].point);
+                }
+            }
+        }
+
+        function onMouseUp() {
+            selectedModel = null;
+            document.removeEventListener('keydown', onKeyDown, false);
+        }
+
+        function onKeyDown(event) {
+            if (!selectedModel) return;
+
+            switch (event.key) {
+                case 'c':
+                    const newModel = selectedModel.clone();
+                    newModel.position.x += 1;
+                    scene.add(newModel);
+                    models.push(newModel);
+                    break;
+                case 'd':
+                    scene.remove(selectedModel);
+                    models = models.filter(m => m !== selectedModel);
+                    selectedModel = null;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         init();
     </script>
 </body>
 </html>
-
-
