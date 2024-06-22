@@ -104,6 +104,7 @@
         .message-content {
             display: flex;
             align-items: center;
+            justify-content: flex-start; /* 确保内容左对齐 */
         }
         .message-content img {
             margin-right: 0.5rem;
@@ -220,14 +221,15 @@
 
                 const result = await response.json();
                 const botMessage = document.createElement('div');
-                botMessage.className = 'message bot';
-                botMessage.innerHTML = `
-                    <div class="message-content">
-                        <img src="https://i.imgur.com/your_image.jpg" alt="图标">
-                        <span>芯旦</span>
-                        ${result.messages[0].content}
-                    </div>`;
-                chatLog.appendChild(botMessage);
+botMessage.className = 'message bot';
+botMessage.innerHTML = `
+    <div class="message-content">
+        <img src="https://i.imgur.com/your_image.jpg" alt="图标">
+        <div>
+            <span>芯旦</span> ${result.messages[0].content}
+        </div>
+    </div>`;
+chatLog.appendChild(botMessage);
             } catch (error) {
                 const errorMessage = document.createElement('div');
                 errorMessage.className = 'message bot';
