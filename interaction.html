@@ -101,59 +101,30 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 80%;
             display: flex;
-            align-items: center;
+            flex-direction: column;
         }
-        .message img {
-            width: 30px;
-            height: 30px;
-            margin-right: 0.5rem;
-        }
-        .message.bot .bot-header {
+        .message-header {
             display: flex;
             align-items: center;
             margin-bottom: 0.5rem;
         }
-        .message.bot .bot-header img {
+        .message-header img {
+            width: 30px;
+            height: 30px;
             margin-right: 0.5rem;
         }
-        .message.bot .bot-header span {
+        .message-header span {
             font-weight: bold;
+        }
+        .message-content {
+            background-color: #fff;
+            align-self: flex-start;
+            word-break: break-word;
         }
         .message.user {
             background-color: #e0f7fa;
             text-align: right;
             align-self: flex-end;
-        }
-       .message-content {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-}
-
-.message.bot {
-    background-color: #fff;
-    align-self: flex-start;
-    display: flex;
-    align-items: center;
-    flex-direction: row; /* 确保内容在同一行 */
-}
-
-.message.bot .message-content span {
-    margin-right: 0.5rem; /* 确保“芯旦”两个字和后面的内容有间距 */
-}
-
-.message.bot div:last-child {
-    flex: 1; /* 确保后面的内容占据剩余空间 */
-    display: flex;
-    align-items: center;
-    word-break: break-word; /* 确保长内容换行 */
-}
-        .message-content img {
-            margin-right: 0.3rem;
-        }
-        .message-content span {
-            font-weight: bold;
-            margin-right: 0.5rem;
         }
         .thinking {
             display: none;
@@ -215,12 +186,14 @@
         </nav>
         <div id="chatLog" class="chat-log">
             <div class="message bot">
-                <div class="message-content">
+                <div class="message-header">
                     <img src="https://img.picui.cn/free/2024/06/22/667696ad0355c.jpg" alt="图标">
-                    <span>芯旦：</span>
+                    <span>芯旦</span>
+                </div>
+                <div class="message-content">
                     👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！
                 </div>
-                <div>
+                <div class="message-content">
                     🌱 此刻你在想些什么？有问题欢迎随时向我提问哦
                 </div>
             </div>
@@ -239,7 +212,7 @@
             </button>
         </div>
     </div>
-    <script>
+       <script>
         async function interactWithModel() {
             const inputText = document.getElementById('inputText').value;
             const chatLog = document.getElementById('chatLog');
@@ -262,7 +235,7 @@
                 'Authorization': 'Bearer pat_8fwz7e5QvV8OJUrNN7lNhJRNfmtaiPxidQd2MEUuymbZDR5MnRPlpRPkeLKQ5Xnj',
                 'Content-Type': 'application/json'
             };
-                        const data = {
+            const data = {
                 "conversation_id": "123",
                 "bot_id": "7376213740515147787",
                 "user": "123333333",
@@ -285,9 +258,11 @@
                 const botMessage = document.createElement('div');
                 botMessage.className = 'message bot';
                 botMessage.innerHTML = `
-                    <div class="message-content">
+                    <div class="message-header">
                         <img src="https://img.picui.cn/free/2024/06/22/667696ad0355c.jpg" alt="图标">
-                        <span>芯旦：</span>
+                        <span>芯旦</span>
+                    </div>
+                    <div class="message-content">
                         ${result.messages[0].content}
                     </div>`;
                 chatLog.appendChild(botMessage);
@@ -295,9 +270,11 @@
                 const errorMessage = document.createElement('div');
                 errorMessage.className = 'message bot';
                 errorMessage.innerHTML = `
-                    <div class="message-content">
+                    <div class="message-header">
                         <img src="https://img.picui.cn/free/2024/06/22/667696ad0355c.jpg" alt="图标">
-                        <span>芯旦：</span>
+                        <span>芯旦</span>
+                    </div>
+                    <div class="message-content">
                         Error: ${error.message}
                     </div>`;
                 chatLog.appendChild(errorMessage);
