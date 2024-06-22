@@ -99,7 +99,7 @@
         <div id="output" class="output"></div>
     </div>
     <footer>
-        <p>&copy; 2024 我的公司. 保留所有权利.</p>
+        <p>&copy; 2024 芯旦科技公司. 保留所有权利.</p>
     </footer>
     <script>
         async function interactWithModel() {
@@ -107,17 +107,14 @@
             const url = 'https://api.coze.cn/open_api/v2/chat';
             const headers = {
                 'Authorization': 'Bearer pat_8fwz7e5QvV8OJUrNN7lNhJRNfmtaiPxidQd2MEUuymbZDR5MnRPlpRPkeLKQ5Xnj',
-                'Content-Type': 'application/json',
-                'Accept': '*/*',
-                'Host': 'api.coze.cn',
-                'Connection': 'keep-alive'
+                'Content-Type': 'application/json'
             };
             const data = {
                 "conversation_id": "123",
                 "bot_id": "7376213740515147787",
                 "user": "123333333",
                 "query": inputText,
-                "stream": False
+                "stream": false
             };
 
             try {
