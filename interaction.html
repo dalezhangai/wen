@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大模型互动</title>
+    <title>人工智能交互</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,29 +18,12 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
-            background-color: #f4f4f4;
+            background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-        }
-        .chat-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
-        }
-        .chat-header h1 {
-            margin: 0;
-            font-size: 1.2rem;
-        }
-        .chat-header img {
-            width: 24px;
-            height: 24px;
-            margin-left: 8px;
         }
         .chat-log {
             flex: 1;
@@ -53,6 +36,7 @@
             padding: 0.5rem 1rem;
             background-color: #fff;
             border-top: 1px solid #ddd;
+            align-items: center;
         }
         .chat-input textarea {
             flex: 1;
@@ -86,11 +70,19 @@
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 80%;
+            display: flex;
+            align-items: center;
+        }
+        .message img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
         }
         .message.bot:before {
             content: "芯旦：";
             font-weight: bold;
-            display: block;
+            display: inline;
         }
         .message.user {
             background-color: #e0f7fa;
@@ -103,22 +95,13 @@
             display: flex;
             align-items: center;
         }
-        .message.bot img {
-            width: 24px;
-            height: 24px;
-            margin-right: 8px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="chat-header">
-            <h1>芯旦</h1>
-            <img src="https://via.placeholder.com/24" alt="图标">
-        </div>
         <div id="chatLog" class="chat-log">
             <div class="message bot">
-                <img src="https://via.placeholder.com/24" alt="图标">
+                <img src="https://via.placeholder.com/30" alt="图标">
                 👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！<br>
                 🌱 此刻你在想些什么？有问题欢迎随时向我提问，或者把你想读的 📄 网页和 📚 文件发给我试试~
             </div>
@@ -171,16 +154,16 @@
                 const result = await response.json();
                 const botMessage = document.createElement('div');
                 botMessage.className = 'message bot';
-                botMessage.innerHTML = `<img src="https://via.placeholder.com/24" alt="图标"> ${result.messages[0].content}`;
+                botMessage.innerHTML = `<img src="https://via.placeholder.com/30" alt="图标"> ${result.messages[0].content}`;
                 chatLog.appendChild(botMessage);
             } catch (error) {
                 const errorMessage = document.createElement('div');
                 errorMessage.className = 'message bot';
-                errorMessage.innerHTML = `<img src="https://via.placeholder.com/24" alt="图标"> Error: ${error.message}`;
+                errorMessage.innerHTML = `<img src="https://via.placeholder.com/30" alt="图标"> Error: ${error.message}`;
                 chatLog.appendChild(errorMessage);
             }
 
-            // 滚动到底部
+            // 滋滚动到底部
             chatLog.scrollTop = chatLog.scrollHeight;
         }
     </script>
