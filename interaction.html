@@ -124,26 +124,32 @@
             text-align: right;
             align-self: flex-end;
         }
-        .message.bot {
+       .message-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.message.bot {
     background-color: #fff;
     align-self: flex-start;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     flex-direction: row; /* 确保内容在同一行 */
 }
 
-.message-content {
+.message.bot .message-content span {
+    margin-right: 0.5rem; /* 确保“芯旦”两个字和后面的内容有间距 */
+}
+
+.message.bot div:last-child {
+    flex: 1; /* 确保后面的内容占据剩余空间 */
     display: flex;
     align-items: center;
-    flex-wrap: nowrap; /* 确保内容不换行 */
-    flex-direction: row; /* 确保内容在同一行 */
-}
-
-.message-content span {
-    margin-right: 0; /* 去掉右边距 */
+    word-break: break-word; /* 确保长内容换行 */
 }
         .message-content img {
-            margin-right: 0.5rem;
+            margin-right: 0.3rem;
         }
         .message-content span {
             font-weight: bold;
