@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,31 +43,56 @@
         .container {
             padding: 2rem;
         }
-        textarea {
-            width: 100%;
-            height: 100px;
+        .chat-box {
+            max-width: 600px;
+            margin: 0 auto;
             padding: 1rem;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-log {
+            max-height: 400px;
+            overflow-y: auto;
             margin-bottom: 1rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+        }
+        .chat-input {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        .chat-input textarea {
+            flex: 1;
+            padding: 1rem;
             border-radius: 5px;
             border: 1px solid #ddd;
+            resize: none;
         }
-        button {
+        .chat-input button {
             padding: 1rem 2rem;
+            margin-left: 1rem;
             background-color: #333;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-        button:hover {
+        .chat-input button:hover {
             background-color: #555;
         }
-        .output {
-            margin-top: 1rem;
+        .message {
+            margin-bottom: 1rem;
             padding: 1rem;
-            background-color: white;
             border-radius: 5px;
+            background-color: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .message.bot:before {
+            content: "芯旦：";
+            font-weight: bold;
         }
         footer {
             background-color: #333;
@@ -94,9 +119,13 @@
         </ul>
     </nav>
     <div class="container">
-        <textarea id="inputText" placeholder="输入文本"></textarea>
-        <button onclick="interactWithModel()">发送</button>
-        <div id="output" class="output"></div>
+        <div class="chat-box">
+            <div id="chatLog" class="chat-log"></div>
+            <div class="chat-input">
+                <textarea id="inputText" placeholder="输入文本"></textarea>
+                <button onclick="interactWithModel()">发送</button>
+            </div>
+        </div>
     </div>
     <footer>
         <p>&copy; 2024 芯旦科技公司. 保留所有权利.</p>
@@ -104,6 +133,17 @@
     <script>
         async function interactWithModel() {
             const inputText = document.getElementById('inputText').value;
+            const chatLog = document.getElementById('chatLog');
+
+            // 显示用户消息
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message';
+            userMessage.innerText = inputText;
+            chatLog.appendChild(userMessage);
+
+            // 清空输入框
+            document.getElementById('inputText').value = '';
+
             const url = 'https://api.coze.cn/open_api/v2/chat';
             const headers = {
                 'Authorization': 'Bearer pat_8fwz7e5QvV8OJUrNN7lNhJRNfmtaiPxidQd2MEUuymbZDR5MnRPlpRPkeLKQ5Xnj',
@@ -129,10 +169,19 @@
                 }
 
                 const result = await response.json();
-                document.getElementById('output').innerText = JSON.stringify(result, null, 2);
+                const botMessage = document.createElement('div');
+                botMessage.className = 'message bot';
+                botMessage.innerText = result.messages[0].content;
+                chatLog.appendChild(botMessage);
             } catch (error) {
-                document.getElementById('output').innerText = `Error: ${error.message}`;
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'message bot';
+                errorMessage.innerText = `Error: ${error.message}`;
+                chatLog.appendChild(errorMessage);
             }
+
+            // 滚动到底部
+            chatLog.scrollTop = chatLog.scrollHeight;
         }
     </script>
 </body>
