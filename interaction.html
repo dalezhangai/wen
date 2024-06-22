@@ -112,6 +112,44 @@
             font-weight: bold;
             margin-right: 0.5rem;
         }
+        .thinking {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        .thinking span {
+            font-size: 1rem;
+            color: #888;
+        }
+        .thinking span::after {
+            content: '...';
+            animation: dots 1s steps(5, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% {
+                color: rgba(0,0,0,0);
+                text-shadow:
+                    .25em 0 0 rgba(0,0,0,0),
+                    .5em 0 0 rgba(0,0,0,0);
+            }
+            40% {
+                color: #888;
+                text-shadow:
+                    .25em 0 0 rgba(0,0,0,0),
+                    .5em 0 0 rgba(0,0,0,0);
+            }
+            60% {
+                text-shadow:
+                    .25em 0 0 #888,
+                    .5em 0 0 rgba(0,0,0,0);
+            }
+            80%, 100% {
+                text-shadow:
+                    .25em 0 0 #888,
+                    .5em 0 0 #888;
+            }
+        }
     </style>
 </head>
 <body>
@@ -119,7 +157,7 @@
         <div id="chatLog" class="chat-log">
             <div class="message bot">
                 <div class="message-content">
-                    <img src="https://github.com/dalezhangai/wen/blob/main/%E8%8A%AF%E6%97%A6%E5%9B%BE%E7%89%87.jpg?raw=true" alt="图标">
+                    <img src="https://i.imgur.com/your_image.jpg" alt="图标">
                     <span>芯旦</span>
                     👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！
                 </div>
@@ -127,6 +165,9 @@
                     🌱 此刻你在想些什么？有问题欢迎随时向我提问，或者把你想读的 📄 网页和 📚 文件发给我试试~
                 </div>
             </div>
+        </div>
+        <div id="thinking" class="thinking">
+            <span>大模型正在思考中</span>
         </div>
         <div class="chat-input">
             <textarea id="inputText" placeholder="有什么问题尽管问我"></textarea>
@@ -139,6 +180,7 @@
         async function interactWithModel() {
             const inputText = document.getElementById('inputText').value;
             const chatLog = document.getElementById('chatLog');
+            const thinking = document.getElementById('thinking');
 
             // 显示用户消息
             const userMessage = document.createElement('div');
@@ -148,6 +190,9 @@
 
             // 清空输入框
             document.getElementById('inputText').value = '';
+
+            // 显示思考动画
+            thinking.style.display = 'flex';
 
             const url = 'https://api.coze.cn/open_api/v2/chat';
             const headers = {
@@ -178,7 +223,7 @@
                 botMessage.className = 'message bot';
                 botMessage.innerHTML = `
                     <div class="message-content">
-                        <img src="https://github.com/dalezhangai/wen/blob/main/%E8%8A%AF%E6%97%A6%E5%9B%BE%E7%89%87.jpg?raw=true" alt="图标">
+                        <img src="https://i.imgur.com/your_image.jpg" alt="图标">
                         <span>芯旦</span>
                         ${result.messages[0].content}
                     </div>`;
@@ -188,11 +233,14 @@
                 errorMessage.className = 'message bot';
                 errorMessage.innerHTML = `
                     <div class="message-content">
-                        <img src="https://github.com/dalezhangai/wen/blob/main/%E8%8A%AF%E6%97%A6%E5%9B%BE%E7%89%87.jpg?raw=true" alt="图标">
+                        <img src="https://i.imgur.com/your_image.jpg" alt="图标">
                         <span>芯旦</span>
                         Error: ${error.message}
                     </div>`;
                 chatLog.appendChild(errorMessage);
+            } finally {
+                // 隐藏思考动画
+                thinking.style.display = 'none';
             }
 
             // 滚动到底部
