@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>人工智能交互</title>
+    <title>大模型互动</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,6 +24,31 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+        }
+        nav {
+            padding: 10px 20px;
+            background-color: #000;
+            color: white;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+        nav ul li {
+            display: inline;
+        }
+        nav ul li a {
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #000;
+            color: white;
+            border-radius: 5px;
+        }
+        nav ul li a:hover {
+            background-color: #333;
         }
         .chat-log {
             flex: 1;
@@ -150,46 +175,12 @@
                     .5em 0 0 #888;
             }
         }
-        .back-button {
-            padding: 0.2rem 0.3rem;
-            background-color: #000000;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            text-align: left;
-            margin: 1rem;
-            display: inline-block;
-            text-decoration: none;
-        }
-
-        .back-button:hover {
-            background-color: #333333;
-        }
         .upload-icon {
             cursor: pointer;
             margin-right: 0.5rem;
         }
         .upload-input {
             display: none;
-        }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        nav ul li {
-            display: inline;
-            margin-right: 10px;
-        }
-        nav ul li a {
-            text-decoration: none;
-            padding: 5px 10px;
-            background-color: #000;
-            color: white;
-            border-radius: 5px;
-        }
-        nav ul li a:hover {
-            background-color: #333;
         }
     </style>
 </head>
@@ -200,7 +191,7 @@
                 <li><a href="index.html">首页</a></li>
                 <li><a href="news.html">最新资讯</a></li>
                 <li><a href="3dmodel.html">3D人形模型构建</a></li>
-                <li><a href="interaction.html">人工智能交互</a></li>
+                <li><a href="interaction.html">大模型交互</a></li>
                 <li><a href="products.html">人形机器人商品</a></li>
             </ul>
         </nav>
@@ -248,12 +239,12 @@
             // 显示思考动画
             thinking.style.display = 'flex';
 
-                        const url = 'https://api.coze.cn/open_api/v2/chat';
+            const url = 'https://api.coze.cn/open_api/v2/chat';
             const headers = {
                 'Authorization': 'Bearer pat_8fwz7e5QvV8OJUrNN7lNhJRNfmtaiPxidQd2MEUuymbZDR5MnRPlpRPkeLKQ5Xnj',
                 'Content-Type': 'application/json'
             };
-            const data = {
+                        const data = {
                 "conversation_id": "123",
                 "bot_id": "7376213740515147787",
                 "user": "123333333",
