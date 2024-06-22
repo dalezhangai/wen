@@ -125,17 +125,19 @@
             align-self: flex-end;
         }
         .message.bot {
-            background-color: #fff;
-            align-self: flex-start;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-        }
-        .message-content {
-            display: flex;
-            align-items: center;
-            flex-wrap: nowrap; /* 确保内容不换行 */
-        }
+    background-color: #fff;
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    flex-direction: row; /* 确保内容在同一行 */
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap; /* 确保内容不换行 */
+    flex-direction: row; /* 确保内容在同一行 */
+}
         .message-content img {
             margin-right: 0.5rem;
         }
