@@ -10,6 +10,9 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         header {
             background-color: #333;
@@ -41,16 +44,26 @@
             background-color: #555;
         }
         .container {
+            flex: 1;
             padding: 2rem;
+            text-align: center;
         }
         footer {
             background-color: #333;
             color: white;
             text-align: center;
             padding: 1rem 0;
-            position: fixed;
+            position: relative;
             width: 100%;
-            bottom: 0;
+        }
+        #3dmodel {
+            width: 100%;
+            height: 60vh;
+            background-color: #e0e0e0;
+            margin: auto;
+        }
+        .input-container {
+            margin-bottom: 1rem;
         }
     </style>
 </head>
@@ -68,22 +81,64 @@
         </ul>
     </nav>
     <div class="container">
-        <div id="3dmodel" style="width: 100%; height: 400px;"></div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="输入模型高度和颜色，例如 '高度: 5 颜色: red'">
+            <button onclick="generateModel()">生成模型</button>
+        </div>
+        <div id="3dmodel"></div>
     </div>
     <footer>
         <p>&copy; 2024 芯旦科技公司. 保留所有权利.</p>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('3dmodel').appendChild(renderer.domElement);
+        let scene, camera, renderer, model;
 
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('3dmodel').appendChild(renderer.domElement);
 
-        camera.position
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(5, 10, 7.5);
+            scene.add(light);
+
+            camera.position.z = 5;
+
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (model) model.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+
+        function generateModel() {
+            const input = document.getElementById('userInput').value;
+            const heightMatch = input.match(/高度:\s*(\d+(\.\d+)?)/);
+            const colorMatch = input.match(/颜色:\s*([a-zA-Z]+)/);
+
+            const height = heightMatch ? parseFloat(heightMatch[1]) : 1;
+            const color = colorMatch ? colorMatch[1] : 'gray';
+
+            if (model) scene.remove(model);
+
+            const geometry = new THREE.BoxGeometry(1, height, 1);
+            const material = new THREE.MeshStandardMaterial({ color: color });
+            model = new THREE.Mesh(geometry, material);
+            scene.add(model);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        init();
+    </script>
+</body>
+</html>
