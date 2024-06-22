@@ -99,7 +99,19 @@
             background-color: #fff;
             align-self: flex-start;
             display: flex;
+            align-items: center;
             flex-direction: column;
+        }
+        .message-content {
+            display: flex;
+            align-items: center;
+        }
+        .message-content img {
+            margin-right: 0.5rem;
+        }
+        .message-content span {
+            font-weight: bold;
+            margin-right: 0.5rem;
         }
     </style>
 </head>
@@ -107,10 +119,14 @@
     <div class="container">
         <div id="chatLog" class="chat-log">
             <div class="message bot">
-                <div class="bot-header">
+                <div class="message-content">
                     <img src="https://github.com/dalezhangai/wen/blob/main/%E8%8A%AF%E6%97%A6%E5%9B%BE%E7%89%87.jpg?raw=true" alt="图标">
-                    <span>芯旦</span> </div> 👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！<br>
-                🌱 此刻你在想些什么？有问题欢迎随时向我提问，或者把你想读的 📄 网页和 📚 文件发给我试试~
+                    <span>芯旦</span>
+                    👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！
+                </div>
+                <div>
+                    🌱 此刻你在想些什么？有问题欢迎随时向我提问，或者把你想读的 📄 网页和 📚 文件发给我试试~
+                </div>
             </div>
         </div>
         <div class="chat-input">
@@ -162,21 +178,21 @@
                 const botMessage = document.createElement('div');
                 botMessage.className = 'message bot';
                 botMessage.innerHTML = `
-                    <div class="bot-header">
+                    <div class="message-content">
                         <img src="https://github.com/dalezhangai/wen/blob/main/%E8%8A%AF%E6%97%A6%E5%9B%BE%E7%89%87.jpg?raw=true" alt="图标">
                         <span>芯旦</span>
-                    </div>
-                    ${result.messages[0].content}`;
+                        ${result.messages[0].content}
+                    </div>`;
                 chatLog.appendChild(botMessage);
             } catch (error) {
                 const errorMessage = document.createElement('div');
                 errorMessage.className = 'message bot';
                 errorMessage.innerHTML = `
-                    <div class="bot-header">
+                    <div class="message-content">
                         <img src="https://github.com/dalezhangai/wen/blob/main/%E8%8A%AF%E6%97%A6%E5%9B%BE%E7%89%87.jpg?raw=true" alt="图标">
                         <span>芯旦</span>
-                    </div>
-                    Error: ${error.message}`;
+                        Error: ${error.message}
+                    </div>`;
                 chatLog.appendChild(errorMessage);
             }
 
