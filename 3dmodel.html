@@ -5,73 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D人形模型构建</title>
     <style>
+        /* 基本样式 */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        header {
-            background-color: #333;
-            color: white;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        nav {
-            background-color: #444;
             overflow: hidden;
+            background-color: #000;
+            color: #fff;
+        }
+        header, nav, .container, footer {
+            margin: 20px;
         }
         nav ul {
-            list-style: none;
-            margin: 0;
+            list-style-type: none;
             padding: 0;
-            text-align: center;
         }
         nav ul li {
             display: inline;
-            margin: 0;
+            margin-right: 10px;
         }
         nav ul li a {
-            display: inline-block;
-            color: white;
-            padding: 1rem;
             text-decoration: none;
+            padding: 5px 10px;
+            background-color: #000;
+            color: white;
+            border-radius: 5px;
         }
         nav ul li a:hover {
-            background-color: #555;
-        }
-        .container {
-            flex: 1;
-            padding: 2rem;
-            text-align: center;
-        }
-        footer {
             background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 1rem 0;
-            position: relative;
-            width: 100%;
+        }
+        .input-container, .button-container {
+            margin-bottom: 10px;
         }
         #3dmodel {
             width: 100%;
-            height: 60vh;
-            background-color: #e0e0e0;
-            margin: auto;
-        }
-        .input-container {
-            margin-bottom: 1rem;
-        }
-        .button-container {
-            margin-bottom: 1rem;
-        }
-        @media (max-width: 600px) {
-            #3dmodel {
-                height: 40vh;
-            }
+            height: 80vh;
+            border: 1px solid #ccc;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
@@ -90,7 +63,7 @@
     </nav>
     <div class="container">
         <div class="input-container">
-            <input type="text" id="userInput" placeholder="输入形状、大小和颜色，例如 '正方体 大 红'">
+            <input type="text" id="userInput" placeholder="输入形状和颜色，例如 '正方体 红色'" oninput="handleUserInput(event)">
             <button onclick="generateModel()">生成模型</button>
         </div>
         <div class="button-container">
@@ -104,11 +77,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/GLTFExporter.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/TransformControls.js"></script>
     <script>
-        let scene, camera, renderer, controls;
+        let scene, camera, renderer, controls, transformControls;
         let models = [];
         let selectedModel = null;
-        let plane;
 
         function init() {
             scene = new THREE.Scene();
@@ -117,24 +90,25 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.getElementById('3dmodel').appendChild(renderer.domElement);
 
-            const light = new THREE.DirectionalLight(0xffffff, 1);
-            light.position.set(5, 10, 7.5);
-            scene.add(light);
-
-            camera.position.z = 10;
-
             controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.25;
-            controls.enableZoom = true;
+            camera.position.set(0, 20, 100);
+            controls.update();
 
-            plane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000), new THREE.MeshBasicMaterial({ visible: false }));
-            scene.add(plane);
+            transformControls = new THREE.TransformControls(camera, renderer.domElement);
+            transformControls.addEventListener('change', render);
+            transformControls.addEventListener('dragging-changed', function (event) {
+                controls.enabled = !event.value;
+            });
+            scene.add(transformControls);
+
+            const gridHelper = new THREE.GridHelper(200, 50);
+            scene.add(gridHelper);
 
             window.addEventListener('resize', onWindowResize, false);
             window.addEventListener('mousedown', onMouseDown, false);
             window.addEventListener('mousemove', onMouseMove, false);
             window.addEventListener('mouseup', onMouseUp, false);
+            window.addEventListener('keydown', onKeyDown, false);
 
             animate();
         }
@@ -152,66 +126,112 @@
         }
 
         function parseInput(input) {
-            const shapeMatch = input.match(/(正方体|长方体|球体|圆柱体|圆锥体|圆环体|八面体|四面体|十二面体|二十面体)/);
-            const sizeMatch = input.match(/(大|中|小)/);
-            const colorMatch = input.match(/(红|黄|蓝|绿|紫|黑|白)/);
-
-            const shape = shapeMatch ? shapeMatch[1] : '正方体';
-            const size = sizeMatch ? sizeMatch[1] : '中';
-            const color = colorMatch ? colorMatch[1] : '灰';
-
-            return { shape, size, color };
-        }
-
-        function getSizeMultiplier(size) {
-            switch (size) {
-                case '大': return 3;
-                case '中': return 2;
-                case '小': return 1;
-                default: return 2;
-            }
+            const parts = input.split(' ');
+            return {
+                shape: parts[0],
+                color: parts[1] || '白色'
+            };
         }
 
         function getColorCode(color) {
             switch (color) {
-                case '红': return 'red';
-                case '黄': return 'yellow';
-                case '蓝': return 'blue';
-                case '绿': return 'green';
-                case '紫': return 'purple';
-                case '黑': return 'black';
-                case '白': return 'white';
-                default: return 'gray';
+                case '红色':
+                    return 0xff0000;
+                case '绿色':
+                    return 0x00ff00;
+                case '蓝色':
+                    return 0x0000ff;
+                case '黄色':
+                    return 0xffff00;
+                case '紫色':
+                    return 0x800080;
+                case '橙色':
+                    return 0xffa500;
+                case '白色':
+                    return 0xffffff;
+                default:
+                    return 0xffffff;
             }
         }
 
-        function createGeometry(shape, sizeMultiplier) {
+        function createGeometry(shape) {
             switch (shape) {
-                case '正方体': return new THREE.BoxGeometry(sizeMultiplier, sizeMultiplier, sizeMultiplier);
-                case '长方体': return new THREE.BoxGeometry(sizeMultiplier * 2, sizeMultiplier, sizeMultiplier);
-                case '球体': return new THREE.SphereGeometry(sizeMultiplier, 32, 32);
-                case '圆柱体': return new THREE.CylinderGeometry(sizeMultiplier, sizeMultiplier, sizeMultiplier * 2, 32);
-                case '圆锥体': return new THREE.ConeGeometry(sizeMultiplier, sizeMultiplier * 2, 32);
-                case '圆环体': return new THREE.TorusGeometry(sizeMultiplier, sizeMultiplier / 2, 16, 100);
-                case '八面体': return new THREE.OctahedronGeometry(sizeMultiplier);
-                case '四面体': return new THREE.TetrahedronGeometry(sizeMultiplier);
-                case '十二面体': return new THREE.DodecahedronGeometry(sizeMultiplier);
-                case '二十面体': return new THREE.IcosahedronGeometry(sizeMultiplier);
-                default: return new THREE.BoxGeometry(sizeMultiplier, sizeMultiplier, sizeMultiplier);
+                case '正方体':
+                    return new THREE.BoxGeometry(10, 10, 10);
+                case '球体':
+                    return new THREE.SphereGeometry(5, 32, 32);
+                case '圆柱体':
+                    return new THREE.CylinderGeometry(5, 5, 10, 32);
+                case '圆环':
+                    return new THREE.TorusGeometry(5, 2, 16, 100);
+                case '圆锥':
+                    return new THREE.ConeGeometry(5, 10, 32);
+                case '八面体':
+                    return new THREE.OctahedronGeometry(5);
+                case '四面体':
+                    return new THREE.TetrahedronGeometry(5);
+                case '二十面体':
+                    return new THREE.IcosahedronGeometry(5);
+                default:
+                    return new THREE.BoxGeometry(10, 10, 10);
             }
+        }
+
+        function createRobot() {
+            const robot = new THREE.Group();
+
+            const bodyGeometry = new THREE.BoxGeometry(10, 20, 5);
+            const bodyMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.position.y = 10;
+            robot.add(body);
+
+            const headGeometry = new THREE.BoxGeometry(6, 6, 6);
+            const headMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = 25;
+            robot.add(head);
+
+            const armGeometry = new THREE.BoxGeometry(2, 10, 2);
+            const armMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+            const leftArm = new THREE.Mesh(armGeometry, armMaterial);
+            leftArm.position.set(-7, 15, 0);
+            robot.add(leftArm);
+
+            const rightArm = leftArm.clone();
+            rightArm.position.set(7, 15, 0);
+            robot.add(rightArm);
+
+            const legGeometry = new THREE.BoxGeometry(2, 10, 2);
+            const legMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+            const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+            leftLeg.position.set(-3, 0, 0);
+            robot.add(leftLeg);
+
+            const rightLeg = leftLeg.clone();
+            rightLeg.position.set(3, 0, 0);
+            robot.add(rightLeg);
+
+            return robot;
         }
 
         function generateModel() {
             const input = document.getElementById('userInput').value;
-            const { shape, size, color } = parseInput(input);
+            const parsedInput = parseInput(input);
+            let model;
 
-            const sizeMultiplier = getSizeMultiplier(size);
-            const colorCode = getColorCode(color);
+            if (parsedInput.shape === '机器人') {
+                model = createRobot();
+            } else {
+                const colorCode = getColorCode(parsedInput.color);
+                const geometry = createGeometry(parsedInput.shape);
+                const material = new THREE.MeshBasicMaterial({ color: colorCode });
+                model = new THREE.Mesh(geometry, material);
+            }
 
-            const geometry = createGeometry(shape, sizeMultiplier);
-            const material = new THREE.MeshStandardMaterial({ color: colorCode });
-            const model = new THREE.Mesh(geometry, material);
-            model.userData = { shape, size, color };
+            const offset = models.length * 15; // 每个模型在x轴上偏移15单位
+            model.position.set(offset, 0, 0);
+
             scene.add(model);
             models.push(model);
         }
@@ -221,48 +241,58 @@
             exporter.parse(scene, function (result) {
                 const output = JSON.stringify(result, null, 2);
                 const blob = new Blob([output], { type: 'application/json' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'model.gltf';
-                link.click();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'model.gltf';
+                                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
             });
         }
 
         function onMouseDown(event) {
-            event.preventDefault();
-            const mouse = new THREE.Vector2();
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-            const raycaster = new THREE.Raycaster();
-            raycaster.setFromCamera(mouse, camera);
-
-            const intersects = raycaster.intersectObjects(models);
-            if (intersects.length > 0) {
-                selectedModel = intersects[0].object;
-                document.addEventListener('keydown', onKeyDown, false);
+            if (event.target.tagName.toLowerCase() === 'input') {
+                return; // 如果事件源是输入框,则直接返回
             }
-        }
-
-        function onMouseMove(event) {
-            if (selectedModel) {
-                const mouse = new THREE.Vector2();
-                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-                mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-                const raycaster = new THREE.Raycaster();
-                raycaster.setFromCamera(mouse, camera);
-
-                const intersects = raycaster.intersectObject(plane);
-                if (intersects.length > 0) {
-                    selectedModel.position.copy(intersects[0].point);
+            const intersects = getIntersects(event.clientX, event.clientY);
+            if (intersects.length > 0) {
+                const object = intersects[0].object;
+                if (selectedModel !== object) {
+                    if (selectedModel) {
+                        transformControls.detach(selectedModel);
+                    }
+                    selectedModel = object;
+                    transformControls.attach(selectedModel);
+                }
+            } else {
+                if (selectedModel) {
+                    transformControls.detach(selectedModel);
+                    selectedModel = null;
                 }
             }
         }
 
-        function onMouseUp() {
-            selectedModel = null;
-            document.removeEventListener('keydown', onKeyDown, false);
+        function onMouseMove(event) {
+            // 仅用于显示光标指示
+        }
+
+        function onMouseUp(event) {
+            // 仅用于显示光标指示
+        }
+
+        function getIntersects(x, y) {
+            const mouse = new THREE.Vector2();
+            mouse.x = (x / window.innerWidth) * 2 - 1;
+            mouse.y = -(y / window.innerHeight) * 2 + 1;
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+            return raycaster.intersectObjects(models, true);
+        }
+
+        function handleUserInput(event) {
+            // 处理用户输入的逻辑
         }
 
         function onKeyDown(event) {
@@ -270,14 +300,15 @@
 
             switch (event.key) {
                 case 'c':
-                    const newModel = selectedModel.clone();
-                    newModel.position.x += 1;
-                    scene.add(newModel);
-                    models.push(newModel);
+                    const clonedModel = selectedModel.clone();
+                    clonedModel.position.x += 10;
+                    scene.add(clonedModel);
+                    models.push(clonedModel);
                     break;
                 case 'd':
                     scene.remove(selectedModel);
-                    models = models.filter(m => m !== selectedModel);
+                    models = models.filter(model => model !== selectedModel);
+                    transformControls.detach();
                     selectedModel = null;
                     break;
                 default:
@@ -285,7 +316,18 @@
             }
         }
 
+        document.getElementById('userInput').addEventListener('input', handleUserInput, false);
+        window.addEventListener('resize', onWindowResize, false);
+        window.addEventListener('mousedown', onMouseDown, false);
+        window.addEventListener('mousemove', onMouseMove, false);
+        window.addEventListener('mouseup', onMouseUp, false);
+        window.addEventListener('keydown', onKeyDown, false);
+
         init();
+
+        function render() {
+            renderer.render(scene, camera);
+        }
     </script>
 </body>
 </html>
