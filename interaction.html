@@ -28,7 +28,7 @@
         .chat-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             padding: 1rem;
             background-color: #fff;
             border-bottom: 1px solid #ddd;
@@ -38,9 +38,9 @@
             font-size: 1.2rem;
         }
         .chat-header img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            margin-left: 8px;
         }
         .chat-log {
             flex: 1;
@@ -50,21 +50,21 @@
         }
         .chat-input {
             display: flex;
-            padding: 1rem;
+            padding: 0.5rem 1rem;
             background-color: #fff;
             border-top: 1px solid #ddd;
         }
         .chat-input textarea {
             flex: 1;
-            padding: 1rem;
+            padding: 0.5rem;
             border-radius: 20px;
             border: 1px solid #ddd;
             resize: none;
-            margin-right: 1rem;
+            margin-right: 0.5rem;
             font-size: 1rem;
         }
         .chat-input button {
-            padding: 1rem;
+            padding: 0.5rem;
             background-color: #007bff;
             color: white;
             border: none;
@@ -73,6 +73,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 40px;
+            height: 40px;
         }
         .chat-input button:hover {
             background-color: #0056b3;
@@ -98,18 +100,25 @@
         .message.bot {
             background-color: #fff;
             align-self: flex-start;
+            display: flex;
+            align-items: center;
+        }
+        .message.bot img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="chat-header">
-            <img src="https://via.placeholder.com/40" alt="头像">
             <h1>芯旦</h1>
-            <div></div>
+            <img src="https://via.placeholder.com/24" alt="图标">
         </div>
         <div id="chatLog" class="chat-log">
             <div class="message bot">
+                <img src="https://via.placeholder.com/24" alt="图标">
                 👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！<br>
                 🌱 此刻你在想些什么？有问题欢迎随时向我提问，或者把你想读的 📄 网页和 📚 文件发给我试试~
             </div>
@@ -162,12 +171,12 @@
                 const result = await response.json();
                 const botMessage = document.createElement('div');
                 botMessage.className = 'message bot';
-                botMessage.innerText = result.messages[0].content;
+                botMessage.innerHTML = `<img src="https://via.placeholder.com/24" alt="图标"> ${result.messages[0].content}`;
                 chatLog.appendChild(botMessage);
             } catch (error) {
                 const errorMessage = document.createElement('div');
                 errorMessage.className = 'message bot';
-                errorMessage.innerText = `Error: ${error.message}`;
+                errorMessage.innerHTML = `<img src="https://via.placeholder.com/24" alt="图标"> Error: ${error.message}`;
                 chatLog.appendChild(errorMessage);
             }
 
