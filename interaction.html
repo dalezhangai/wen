@@ -150,15 +150,38 @@
                     .5em 0 0 #888;
             }
         }
+        .back-button {
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            text-align: center;
+            margin: 1rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        .upload-icon {
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+        .upload-input {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <a href="index.html" class="back-button">返回主菜单</a>
         <div id="chatLog" class="chat-log">
             <div class="message bot">
                 <div class="message-content">
                     <img src="https://i.imgur.com/your_image.jpg" alt="图标">
-                    <span>芯旦</span>
+                    <span>芯旦：</span>
                     👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！
                 </div>
                 <div>
@@ -170,6 +193,10 @@
             <span>大模型正在思考中</span>
         </div>
         <div class="chat-input">
+            <label for="fileUpload" class="upload-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="#007bff" d="M5 20h14v-2H5v2zm7-18L5.33 8h3.84v8h4.66V8h3.84L12 2z"/></svg>
+            </label>
+            <input id="fileUpload" type="file" class="upload-input" onchange="uploadFile()">
             <textarea id="inputText" placeholder="有什么问题尽管问我"></textarea>
             <button onclick="interactWithModel()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="white" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
@@ -224,7 +251,7 @@
                 botMessage.innerHTML = `
                     <div class="message-content">
                         <img src="https://i.imgur.com/your_image.jpg" alt="图标">
-                        <span>芯旦</span>
+                        <span>芯旦：</span>
                         ${result.messages[0].content}
                     </div>`;
                 chatLog.appendChild(botMessage);
@@ -234,7 +261,7 @@
                 errorMessage.innerHTML = `
                     <div class="message-content">
                         <img src="https://i.imgur.com/your_image.jpg" alt="图标">
-                        <span>芯旦</span>
+                        <span>芯旦：</span>
                         Error: ${error.message}
                     </div>`;
                 chatLog.appendChild(errorMessage);
@@ -246,6 +273,23 @@
             // 滚动到底部
             chatLog.scrollTop = chatLog.scrollHeight;
         }
+
+        function uploadFile() {
+            const fileInput = document.getElementById('fileUpload');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const chatLog = document.getElementById('chatLog');
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'message user';
+                    userMessage.innerHTML = `<img src="${e.target.result}" alt="上传的图片" style="max-width: 100%;">`;
+                    chatLog.appendChild(userMessage);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 </body>
 </html>
+
