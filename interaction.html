@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>人工智能交互</title>
+    <title>大模型互动</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -79,10 +79,16 @@
             border-radius: 50%;
             margin-right: 0.5rem;
         }
-        .message.bot:before {
-            content: "芯旦：";
+        .message.bot .bot-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .message.bot .bot-header img {
+            margin-right: 0.5rem;
+        }
+        .message.bot .bot-header span {
             font-weight: bold;
-            display: inline;
         }
         .message.user {
             background-color: #e0f7fa;
@@ -93,7 +99,7 @@
             background-color: #fff;
             align-self: flex-start;
             display: flex;
-            align-items: center;
+            flex-direction: column;
         }
     </style>
 </head>
@@ -101,7 +107,10 @@
     <div class="container">
         <div id="chatLog" class="chat-log">
             <div class="message bot">
-                <img src="https://github.com/dalezhangai/wen/blob/main/%E8%8A%AF%E6%97%A6%E5%9B%BE%E7%89%87.jpg?raw=true" alt="图标">
+                <div class="bot-header">
+                    <img src="https://github.com/dalezhangai/wen/blob/main/%E8%8A%AF%E6%97%A6%E5%9B%BE%E7%89%87.jpg?raw=true" alt="图标">
+                    <span>芯旦</span>
+                </div>
                 👋 你好呀，我是芯旦科技研发的人工智能大模型，很高兴认识你！<br>
                 🌱 此刻你在想些什么？有问题欢迎随时向我提问，或者把你想读的 📄 网页和 📚 文件发给我试试~
             </div>
@@ -154,16 +163,26 @@
                 const result = await response.json();
                 const botMessage = document.createElement('div');
                 botMessage.className = 'message bot';
-                botMessage.innerHTML = `<img src="https://via.placeholder.com/30" alt="图标"> ${result.messages[0].content}`;
+                botMessage.innerHTML = `
+                    <div class="bot-header">
+                        <img src="https://github.com/dalezhangai/wen/blob/main/%E8%8A%AF%E6%97%A6%E5%9B%BE%E7%89%87.jpg?raw=true" alt="图标">
+                        <span>芯旦</span>
+                    </div>
+                    ${result.messages[0].content}`;
                 chatLog.appendChild(botMessage);
             } catch (error) {
                 const errorMessage = document.createElement('div');
                 errorMessage.className = 'message bot';
-                errorMessage.innerHTML = `<img src="https://via.placeholder.com/30" alt="图标"> Error: ${error.message}`;
+                errorMessage.innerHTML = `
+                    <div class="bot-header">
+                        <img src="https://github.com/dalezhangai/wen/blob/main/%E8%8A%AF%E6%97%A6%E5%9B%BE%E7%89%87.jpg?raw=true" alt="图标">
+                        <span>芯旦</span>
+                    </div>
+                    Error: ${error.message}`;
                 chatLog.appendChild(errorMessage);
             }
 
-            // 滋滚动到底部
+            // 滚动到底部
             chatLog.scrollTop = chatLog.scrollHeight;
         }
     </script>
