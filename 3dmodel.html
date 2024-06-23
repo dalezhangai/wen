@@ -49,8 +49,12 @@ nav ul li a:hover {
     border-radius: 5px;
 }
 .input-container button, .button-container button {
-    background-color: #888; /* 按钮背景色为灰色 */
+    background-color: #000; /* 按钮背景色为黑色 */
     color: #fff;
+    transition: background-color 0.3s; /* 添加过渡效果 */
+}
+.input-container button:hover, .button-container button:hover {
+    background-color: #333; /* 鼠标悬停时的背景色 */
 }
 #3dmodel {
     width: 100%;
@@ -148,26 +152,27 @@ nav ul li a:hover {
             };
         }
 
-        function getColorCode(color) {
-            const colors = {
-                '红色': 0xff0000,
-                '绿色': 0x00ff00,
-                '蓝色': 0x0000ff,
-                '黄色': 0xffff00,
-                '紫色': 0x800080,
-                '橙色': 0xffa500,
-                '白色': 0xffffff,
-                '黑色': 0x000000,
-                '灰色': 0x808080,
-                '粉色': 0xffc0cb,
-                '棕色': 0x8b4513,
-                '青色': 0x00ffff,
-                '靛色': 0x4b0082,
-                '金色': 0xffd700,
-                '银色': 0xc0c0c0
-            };
-            return colors[color] || 0xffffff;
-        }
+       function getColorCode(color) {
+    const colors = {
+        '红色': 0xff0000,
+        '绿色': 0x00ff00,
+        '蓝色': 0x0000ff,
+        '黄色': 0xffff00,
+        '紫色': 0x800080,
+        '橙色': 0xffa500,
+        '白色': 0xffffff,
+        '黑色': 0x000000,
+        '灰色': 0x808080,
+        '粉色': 0xffc0cb,
+        '棕色': 0x8b4513,
+        '青色': 0x00ffff,
+        '靛色': 0x4b0082,
+        '金色': 0xffd700,
+        '银色': 0xc0c0c0,
+        '金属色': 0xaaa9ad // 添加金属色
+    };
+    return colors[color] || 0xffffff;
+}
 
         function createGeometry(shape) {
             switch (shape) {
