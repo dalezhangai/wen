@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D人形模型构建</title>
     <style>
-        /* 基本样式 */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -105,9 +104,9 @@
             scene.add(gridHelper);
 
             window.addEventListener('resize', onWindowResize, false);
-            window.addEventListener('mousedown', onMouseDown, false);
-            window.addEventListener('mousemove', onMouseMove, false);
-            window.addEventListener('mouseup', onMouseUp, false);
+            window.addEventListener('pointerdown', onPointerDown, false);
+            window.addEventListener('pointermove', onPointerMove, false);
+            window.addEventListener('pointerup', onPointerUp, false);
             window.addEventListener('keydown', onKeyDown, false);
 
             animate();
@@ -134,46 +133,71 @@
         }
 
         function getColorCode(color) {
-            switch (color) {
-                case '红色':
-                    return 0xff0000;
-                case '绿色':
-                    return 0x00ff00;
-                case '蓝色':
-                    return 0x0000ff;
-                case '黄色':
-                    return 0xffff00;
-                case '紫色':
-                    return 0x800080;
-                case '橙色':
-                    return 0xffa500;
-                case '白色':
-                    return 0xffffff;
-                default:
-                    return 0xffffff;
-            }
+            const colors = {
+                '红色': 0xff0000,
+                '绿色': 0x00ff00,
+                '蓝色': 0x0000ff,
+                '黄色': 0xffff00,
+                '紫色': 0x800080,
+                '橙色': 0xffa500,
+                '白色': 0xffffff,
+                '黑色': 0x000000,
+                '灰色': 0x808080,
+                '粉色': 0xffc0cb,
+                '棕色': 0x8b4513,
+                '青色': 0x00ffff,
+                '靛色': 0x4b0082,
+                '金色': 0xffd700,
+                '银色': 0xc0c0c0
+            };
+            return colors[color] || 0xffffff;
         }
 
         function createGeometry(shape) {
             switch (shape) {
-                case '正方体':
-                    return new THREE.BoxGeometry(10, 10, 10);
-                case '球体':
-                    return new THREE.SphereGeometry(5, 32, 32);
-                case '圆柱体':
-                    return new THREE.CylinderGeometry(5, 5, 10, 32);
-                case '圆环':
-                    return new THREE.TorusGeometry(5, 2, 16, 100);
-                case '圆锥':
-                    return new THREE.ConeGeometry(5, 10, 32);
-                case '八面体':
-                    return new THREE.OctahedronGeometry(5);
-                case '四面体':
-                    return new THREE.TetrahedronGeometry(5);
-                case '二十面体':
-                    return new THREE.IcosahedronGeometry(5);
-                default:
-                    return new THREE.BoxGeometry(10, 10, 10);
+                case '正方体': return new THREE.BoxGeometry(10, 10, 10);
+                case '球体': return new THREE.SphereGeometry(5, 32, 32);
+                case '圆柱体': return new THREE.CylinderGeometry(5, 5, 10, 32);
+                case '圆环': return new THREE.TorusGeometry(5, 2, 16, 100);
+                case '圆锥': return new THREE.ConeGeometry(5, 10, 32);
+                case '八面体': return new THREE.OctahedronGeometry(5);
+                case '四面体': return new THREE.TetrahedronGeometry(5);
+                case '二十面体': return new THREE.IcosahedronGeometry(5);
+                case '五棱柱': return new THREE.CylinderGeometry(5, 5, 10, 5);
+                case '圆台': return new THREE.CylinderGeometry(5, 3, 10, 32);
+                case '棱台': return new THREE.CylinderGeometry(5, 3, 10, 5);
+                case '棱锥': return new THREE.ConeGeometry(5, 10, 5);
+                case '扁平环': return new THREE.TorusGeometry(5, 1, 16, 100);
+                case '弧形': return new THREE.RingGeometry(5, 10, 32);
+                case '圆片': return new THREE.CircleGeometry(5, 32);
+                case '半球体': return new THREE.SphereGeometry(5, 32, 32, 0, Math.PI);
+                case '椭球体': return new THREE.SphereGeometry(5, 32, 32).scale(1, 1.5, 1);
+                case '三角形': return new THREE.CircleGeometry(5, 3);
+                case '长方形': return new THREE.PlaneGeometry(10, 5);
+                case '正五边形': return new THREE.CircleGeometry(5, 5);
+                case '正六边形': return new THREE.CircleGeometry(5, 6);
+                case '正八边形': return new THREE.CircleGeometry(5, 8);
+                case '楔形体': return new THREE.BoxGeometry(10, 10, 5).scale(1, 0.5, 1);
+                case '抛物面': return new THREE.ParametricGeometry(THREE.ParametricGeometries.paraboloid, 25, 25);
+                case '双曲面': return new THREE.ParametricGeometry(THREE.ParametricGeometries.hyperboloid, 25, 25);
+                case '曲面': return new THREE.ParametricGeometry(THREE.ParametricGeometries.plane, 25, 25);
+                case '螺旋体': return new THREE.TorusKnotGeometry(10, 3, 100, 16);
+                case '圆环柱': return new THREE.TorusGeometry(5, 5, 16, 100);
+                case '环锥体': return new THREE.TorusGeometry(5, 5, 16, 100).scale(1, 1.5, 1);
+                case '椭圆锥': return new THREE.ConeGeometry(5, 10, 32).scale(1, 1.5, 1);
+                case '椭圆台': return new THREE.CylinderGeometry(5, 3, 10, 32).scale(1, 1.5, 1);
+                case '双锥体': return new THREE.CylinderGeometry(5, 5, 10, 32).scale(1, 1.5, 1);
+                case '单摆': return new THREE.BoxGeometry(10, 10, 10).scale(1, 2, 1);
+                case '双摆': return new THREE.BoxGeometry(10, 10, 10).scale(1, 2, 2);
+                case '多面体': return new THREE.IcosahedronGeometry(5, 1);
+                case '狭长棱柱': return new THREE.CylinderGeometry(2, 2, 20, 32);
+                case '扁长棱台': return new THREE.CylinderGeometry(2, 1, 20, 32);
+                case '长锥体': return new THREE.ConeGeometry(2, 20, 32);
+                case '凹多面体': return new THREE.DodecahedronGeometry(5, 1);
+                case '凸多面体': return new THREE.OctahedronGeometry(5, 1);
+                case '三棱柱': return new THREE.CylinderGeometry(5, 5, 10, 3);
+                case '四棱锥': return new THREE.ConeGeometry(5, 10, 4);
+                default: return new THREE.BoxGeometry(10, 10, 10);
             }
         }
 
@@ -246,13 +270,13 @@
                 a.style.display = 'none';
                 a.href = url;
                 a.download = 'model.gltf';
-                                document.body.appendChild(a);
+                document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
             });
         }
 
-        function onMouseDown(event) {
+        function onPointerDown(event) {
             if (event.target.tagName.toLowerCase() === 'input') {
                 return; // 如果事件源是输入框,则直接返回
             }
@@ -274,11 +298,11 @@
             }
         }
 
-        function onMouseMove(event) {
+        function onPointerMove(event) {
             // 仅用于显示光标指示
         }
 
-        function onMouseUp(event) {
+        function onPointerUp(event) {
             // 仅用于显示光标指示
         }
 
@@ -318,9 +342,9 @@
 
         document.getElementById('userInput').addEventListener('input', handleUserInput, false);
         window.addEventListener('resize', onWindowResize, false);
-        window.addEventListener('mousedown', onMouseDown, false);
-        window.addEventListener('mousemove', onMouseMove, false);
-        window.addEventListener('mouseup', onMouseUp, false);
+        window.addEventListener('pointerdown', onPointerDown, false);
+        window.addEventListener('pointermove', onPointerMove, false);
+        window.addEventListener('pointerup', onPointerUp, false);
         window.addEventListener('keydown', onKeyDown, false);
 
         init();
@@ -331,3 +355,4 @@
     </script>
 </body>
 </html>
+
