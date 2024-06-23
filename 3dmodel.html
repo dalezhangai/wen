@@ -5,52 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D人形模型构建</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            overflow: hidden;
-            background-color: #000;
-            color: #fff;
-        }
-        header, nav, .container, footer {
-            margin: 20px;
-        }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        nav ul li {
-            display: inline;
-            margin-right: 10px;
-        }
-        nav ul li a {
-            text-decoration: none;
-            padding: 10px 15px; /* 调整导航按钮的大小 */
-            background-color: #000;
-            color: white;
-            border-radius: 5px;
-            font-size: 1.2em; /* 调整字体大小 */
-        }
-        nav ul li a:hover {
-            background-color: #333;
-        }
-       .input-container input, .input-container button, .button-container button {
-    padding: 10px; /* 调整输入框和按钮的大小 */
-    font-size: 1.2em; /* 调整字体大小 */
-    border: 2px solid #fff; /* 调整边框大小 */
-    border-radius: 5px; /* 调整边框圆角 */
-    background-color: #000; /* 按钮背景色 */
-    color: #fff; /* 按钮文字颜色 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    overflow: hidden;
+    background-color: #000;
+    color: #fff;
 }
-        #3dmodel {
-            width: 100%;
-            height: 80vh;
-            border: 1px solid #ccc;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+header, nav, .container, footer {
+    margin: 20px;
+}
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+nav ul li a {
+    text-decoration: none;
+    padding: 10px 15px;
+    background-color: #000;
+    color: white;
+    border-radius: 5px;
+    font-size: 1.2em;
+}
+nav ul li a:hover {
+    background-color: #333;
+}
+.input-container, .button-container {
+    margin-bottom: 10px;
+}
+.input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 调整输入框和按钮的间距 */
+}
+.input-container input, .input-container button, .button-container button {
+    padding: 10px;
+    font-size: 1.2em;
+    border: 2px solid #fff;
+    border-radius: 5px;
+}
+.input-container button, .button-container button {
+    background-color: #888; /* 按钮背景色为灰色 */
+    color: #fff;
+}
+#3dmodel {
+    width: 100%;
+    height: 80vh;
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
     </style>
 </head>
 <body>
