@@ -51,7 +51,7 @@ nav ul li a:hover {
 .input-container button, .button-container button {
     background-color: #000; /* 按钮背景色为黑色 */
     color: #fff;
-    transition: background-color 0.3s; /* 添加过渡效果 */
+    transition: background-color 0.1s; /* 添加过渡效果 */
 }
 .input-container button:hover, .button-container button:hover {
     background-color: #333; /* 鼠标悬停时的背景色 */
@@ -176,7 +176,7 @@ nav ul li a:hover {
 
         function createGeometry(shape) {
             switch (shape) {
-                case '正方体': return new THREE.BoxGeometry(10, 10, 10);
+                case '正方体': return new THREE.BoxGeometry(2, 2, 2);
                 case '球体': return new THREE.SphereGeometry(5, 32, 32);
                 case '圆柱体': return new THREE.CylinderGeometry(5, 5, 10, 32);
                 case '圆环': return new THREE.TorusGeometry(5, 2, 16, 100);
