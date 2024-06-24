@@ -138,6 +138,22 @@ nav ul li a:hover {
             renderer.render(scene, camera);
         }
 
+        function loadMonsterModel() {
+    const loader = new THREE.GLTFLoader();
+    loader.load('scene.gltf', function (gltf) {
+        const model = gltf.scene;
+        model.position.set(0, 0, 0);
+        scene.add(model);
+    });
+}
+
+function handleUserInput(event) {
+    const input = event.target.value.trim().toLowerCase();
+    if (input === '怪兽') {
+        loadMonsterModel();
+    }
+}
+        
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
