@@ -391,6 +391,28 @@ function handleUserInput(event) {
             renderer.render(scene, camera);
         }
     </script>
+        function render() {
+            renderer.render(scene, camera);
+        }
+
+        init(); // 调用初始化函数
+
+        function loadMonsterModel() {
+            const loader = new THREE.GLTFLoader();
+            loader.load('scene.gltf', function (gltf) {
+                const model = gltf.scene;
+                model.position.set(0, 0, 0);
+                scene.add(model);
+            });
+        }
+
+        function handleUserInput(event) {
+            const input = event.target.value.trim().toLowerCase();
+            if (input === '怪兽') {
+                loadMonsterModel();
+            }
+        }
+    </script>
 </body>
 </html>
 
